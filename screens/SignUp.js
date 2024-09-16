@@ -24,11 +24,16 @@ export default function SignUp({ navigation }) {
             "Content-Type": "application/json",
             Accept: "application/json",
           },
-          body: JSON.stringify({ email, password: hashedPassword }),
+          body: JSON.stringify({ firstName, lastName, email, password }),
         }
       );
+      console.log("email: ", email);
+      console.log("hashedPassword: ", hashedPassword);
 
+      console.log("response: ", response);
       const data = await response.json();
+      console.log("data: ", data);
+
       if (response.ok) {
         setUser(data);
         Alert.alert("Login Successful");

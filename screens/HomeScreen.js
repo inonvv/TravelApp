@@ -94,8 +94,33 @@ const HomeScreen = ({ navigation, route }) => {
   const removeCity = (index) => {
     setCityNameArr((prevArr) => prevArr.filter((_, i) => i !== index));
   };
-  const FlyMeAtravel = () => {
-    navigation.navigate("About");
+  const FlyMeAtravel = async () => {
+    console.log("fly me a travel", cityNameArr);
+
+    try {
+      const response = await fetch(
+        "https://yonixasp.bsite.net/api/TripTicket/GetFlightTickets",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({ Cities: cityNameArr, userId: 4 }),
+        }
+      );
+
+      const data = await response.json();
+      console.log(data);
+      if (response.ok) {
+        navigation.navigate("About", {
+          screen: "AboutMain",
+          params: { data },
+        });
+      } else {
+        Alert.alert("Flight Tickets Failed", "One or more details are wrong");
+      }
+    } catch (error) {}
   };
   const ToSignUp = () => {
     navigation.navigate("SignUp");
