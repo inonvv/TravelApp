@@ -2,16 +2,17 @@
 import React from "react";
 import { View, StyleSheet, Image } from "react-native";
 import { Title, Subheading, Button, Divider } from "react-native-paper";
+import { useUser } from "../context/UserContext"; // Import useUser
 
 const ProfileScreen = ({ navigation }) => {
-  const handleEditProfile = () => {};
+  const { user } = useUser(); // Access user data from context
 
-  const handleSettings = () => {
+  const handleEditProfile = () => {
     navigation.navigate("Settings");
   };
 
   const handleLogout = () => {
-    navigation.navigate("SignUp");
+    navigation.replace("SignUp");
   };
 
   return (
@@ -21,8 +22,10 @@ const ProfileScreen = ({ navigation }) => {
         style={styles.avatar}
       />
 
-      <Title style={styles.title}>John Doe</Title>
-      <Subheading style={styles.subheading}>@johndoe</Subheading>
+      <Title style={styles.title}>
+        {user.firstName} {user.lastName}
+      </Title>
+      <Subheading style={styles.subheading}>{user.email}</Subheading>
       <Divider style={styles.divider} />
       <View style={styles.buttonContainer}>
         <Button
@@ -32,9 +35,7 @@ const ProfileScreen = ({ navigation }) => {
         >
           Edit Profile
         </Button>
-        <Button mode="elevated" style={styles.button} onPress={handleSettings}>
-          Settings
-        </Button>
+
         <Button mode="elevated" style={styles.button} onPress={handleLogout}>
           Logout
         </Button>

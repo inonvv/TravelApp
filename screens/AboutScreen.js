@@ -7,7 +7,14 @@ import {
   View,
   Text,
 } from "react-native";
-import { Card, Title, Paragraph, Button, List } from "react-native-paper";
+import {
+  Card,
+  Title,
+  Paragraph,
+  Button,
+  List,
+  Headline,
+} from "react-native-paper";
 import Layout from "../components/Layout";
 import axios from "axios";
 import { useSelectedHotels } from "../context/SelectedHotelsContext";
@@ -148,7 +155,19 @@ const AboutScreen = ({ route, navigation }) => {
             </View>
           ))}
         </View>
-        <Button>Book A Travel!</Button>
+        <View style={styles.headline}>
+          <Button
+            labelStyle={styles.headlineBtnText}
+            onPress={() => {
+              navigation.navigate("....", {
+                screen: "....",
+                params: { data, cityNameArr },
+              });
+            }}
+          >
+            Book A Travel!
+          </Button>
+        </View>
       </ScrollView>
     </Layout>
   );
@@ -170,6 +189,33 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 5,
+  },
+  headline: {
+    alignSelf: "center",
+    marginTop: 50,
+    marginBottom: 30,
+    width: "50%",
+    fontSize: 25,
+    fontWeight: "bold",
+    color: "#ffffff",
+    backgroundColor: "lightblue",
+    paddingVertical: 1,
+    paddingHorizontal: 2,
+    borderRadius: 20,
+    borderColor: "purple",
+    borderWidth: 2,
+    overflow: "hidden",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  headlineBtnText: {
+    fontWeight: "bold",
+    fontStyle: "italic",
+    fontSize: 16,
+    color: "white",
   },
   image: {
     height: 180,

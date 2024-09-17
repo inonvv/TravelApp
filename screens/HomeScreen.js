@@ -6,7 +6,7 @@ import { cities2 } from "../LatLng/LatLng2";
 
 import MapView, { Marker } from "react-native-maps";
 import Tag from "../components/Tag";
-import { Button } from "react-native-paper";
+import { Button, Headline } from "react-native-paper";
 
 const HomeScreen = ({ navigation, route }) => {
   const [cityNameArr, setCityNameArr] = useState([]);
@@ -96,7 +96,6 @@ const HomeScreen = ({ navigation, route }) => {
   };
   const FlyMeAtravel = async () => {
     console.log("fly me a travel", cityNameArr);
-
     try {
       const response = await fetch(
         "https://yonixasp.bsite.net/api/TripTicket/GetFlightTickets",
@@ -111,7 +110,7 @@ const HomeScreen = ({ navigation, route }) => {
       );
 
       const data = await response.json();
-      // console.log(data);
+      console.log(data);
       if (response.ok) {
         navigation.navigate("About", {
           screen: "AboutMain",
@@ -120,17 +119,17 @@ const HomeScreen = ({ navigation, route }) => {
       } else {
         Alert.alert("Flight Tickets Failed", "One or more details are wrong");
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error.message);
+    }
   };
   const ToSignUp = () => {
     navigation.navigate("SignUp");
   };
   return (
     <Layout>
-      <Text style={styles.title}>Choose your destinations</Text>
-      <Button mode="elevated" onPress={CleanMarks} style={styles.button}>
-        Clean
-      </Button>
+      <Headline style={styles.headline}>Choose your destinations</Headline>
+
       <Button onPress={ToSignUp} style={styles.button}>
         SignUp
       </Button>
@@ -156,13 +155,18 @@ const HomeScreen = ({ navigation, route }) => {
           ))}
         </View>
       </View>
-      <Button
-        mode="elevated"
-        onPress={() => FlyMeAtravel()}
-        style={styles.button}
-      >
-        Fly me!
-      </Button>
+      <View style={styles.buttonContainer}>
+        <Button
+          mode="elevated"
+          onPress={() => FlyMeAtravel()}
+          style={styles.button}
+        >
+          Fly me!
+        </Button>
+        <Button mode="elevated" onPress={CleanMarks} style={styles.button}>
+          Clean
+        </Button>
+      </View>
     </Layout>
   );
 };
@@ -180,12 +184,21 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#333",
   },
-  title: {
-    fontSize: 28,
+  headline: {
+    marginTop: 10,
+    marginBottom: 30,
+    fontSize: 25,
     fontWeight: "bold",
+    color: "#ffffff",
+    backgroundColor: "lightblue",
+    paddingVertical: 1,
+    paddingHorizontal: 2,
+    borderRadius: 20,
+    borderColor: "purple",
+    borderWidth: 2,
     textAlign: "center",
-    color: "lightblue",
-    marginBottom: 10,
+    overflow: "hidden",
+    fontStyle: "italic",
   },
   map: {
     width: "100%",
@@ -196,5 +209,9 @@ const styles = StyleSheet.create({
     marginTop: 10,
     width: "30%",
     alignSelf: "center",
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
 });

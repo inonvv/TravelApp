@@ -47,9 +47,8 @@ const MoreDetailsScreen = ({ route, navigation }) => {
     );
     setSelectedHotel(hotel.id);
     if (!isAlreadySelected) {
-      setSelectedHotels((prev) => [...prev, hotel]); // Add hotel if not already selected
+      setSelectedHotels((prev) => [...prev, hotel]);
     }
-
     navigation.navigate("About"); // Navigate to About screen
   };
 
@@ -98,7 +97,10 @@ const MoreDetailsScreen = ({ route, navigation }) => {
             </Card>
           ))
         ) : (
-          <Text>No hotels available for {city}.</Text>
+          <Text>
+            Choose destination First OR there is no hotels in your requested
+            city.
+          </Text>
         )}
       </ScrollView>
     </Layout>
