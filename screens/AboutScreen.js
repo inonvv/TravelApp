@@ -7,16 +7,18 @@ import {
   View,
   Text,
 } from "react-native";
-import { Card, Title, Paragraph, Button } from "react-native-paper";
+import { Card, Title, Paragraph, Button, List } from "react-native-paper";
 import Layout from "../components/Layout";
 import axios from "axios";
+import { useSelectedHotels } from "../context/SelectedHotelsContext";
 
 const UNSPLASH_ACCESS_KEY = "lHBWLGm7YURX1Uk9XrDLxNSvcrtwC1rLY5k3rjF5CTs";
 
 const AboutScreen = ({ route, navigation }) => {
-  const { data } = route.params || {};
+  const { data, cityNameArr } = route.params || {};
   const [images, setImages] = useState({});
   const [loading, setLoading] = useState(true);
+  const { selectedHotels } = useSelectedHotels();
 
   if (!data) {
     return (
@@ -110,9 +112,6 @@ const AboutScreen = ({ route, navigation }) => {
                   <Paragraph style={styles.paragraph}>
                     <Text style={styles.label}>Arrival:</Text> {arrivalDate}
                   </Paragraph>
-                  <Button style={styles.button} mode="elevated">
-                    Check Hotels
-                  </Button>
                 </Card.Content>
               </Card>
             );
@@ -121,6 +120,34 @@ const AboutScreen = ({ route, navigation }) => {
             return null;
           }
         })}
+        <Title style={styles.listTitle}>Check Cities Hotels:</Title>
+        <View style={styles.listContainer}>
+          {cityNameArr.map((city, index) => (
+            <View key={index} style={styles.cityContainer}>
+              <List.Item
+                title={city}
+                titleStyle={styles.listItemText}
+                left={() => <List.Icon icon="map-marker" color="#1A73E8" />}
+                style={styles.listItem}
+              />
+              <Button
+                style={styles.button}
+                mode="elevated"
+                onPress={() =>
+                  navigation.navigate("MoreDetails", {
+                    screen: "MoreDetailsMain",
+                    params: {
+                      cityNameArr,
+                      city,
+                    },
+                  })
+                }
+              >
+                Check Hotels
+              </Button>
+            </View>
+          ))}
+        </View>
         <Button>Book A Travel!</Button>
       </ScrollView>
     </Layout>

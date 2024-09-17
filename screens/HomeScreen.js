@@ -111,11 +111,11 @@ const HomeScreen = ({ navigation, route }) => {
       );
 
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
       if (response.ok) {
         navigation.navigate("About", {
           screen: "AboutMain",
-          params: { data },
+          params: { data, cityNameArr },
         });
       } else {
         Alert.alert("Flight Tickets Failed", "One or more details are wrong");
