@@ -159,9 +159,9 @@ const AboutScreen = ({ route, navigation }) => {
           <Button
             labelStyle={styles.headlineBtnText}
             onPress={() => {
-              navigation.navigate("....", {
-                screen: "....",
-                params: { data, cityNameArr },
+              navigation.navigate("Final", {
+                screen: "FinalMain",
+                params: { data, selectedHotels },
               });
             }}
           >

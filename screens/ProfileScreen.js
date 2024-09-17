@@ -14,6 +14,9 @@ const ProfileScreen = ({ navigation }) => {
   const handleLogout = () => {
     navigation.replace("SignUp");
   };
+  const handleTripView = () => {
+    navigation.replace("");
+  };
 
   return (
     <View style={styles.container}>

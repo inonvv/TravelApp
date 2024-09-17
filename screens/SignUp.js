@@ -1,17 +1,11 @@
 // SignUp.js
 import React, { useState } from "react";
-import { StyleSheet, View, Alert, TouchableOpacity, Text } from "react-native";
-import {
-  Card,
-  TextInput,
-  Button,
-  Title,
-  Paragraph,
-  Headline,
-} from "react-native-paper";
+import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
+import { Card, TextInput, Button, Title, Paragraph } from "react-native-paper";
 import CryptoJS from "crypto-js";
 import Layout from "../components/Layout";
 import { useUser } from "../context/UserContext"; // Import useUser
+import Toast from "react-native-toast-message"; // Import Toast
 
 export default function SignUp({ navigation }) {
   const [email, setEmail] = useState("");
@@ -22,7 +16,23 @@ export default function SignUp({ navigation }) {
   const [isSignUp, setIsSignUp] = useState(false);
   const { setUser: setGlobalUser } = useUser(); // Get setUser from context
 
+  const showToast = (type, text1, text2) => {
+    Toast.show({
+      type: type, // 'success' or 'error'
+      text1: text1,
+      text2: text2,
+    });
+  };
+
   const handleSignIn = async () => {
+    if (!email || !password) {
+      return showToast(
+        "error",
+        "Sign In Failed",
+        "One or more details are missing"
+      );
+    }
+
     try {
       const hashedPassword = CryptoJS.SHA256(password).toString();
       const response = await fetch(
@@ -47,19 +57,28 @@ export default function SignUp({ navigation }) {
       if (response.ok) {
         setGlobalUser(data);
         setUser(data);
-        Alert.alert("Login Successful");
-        setTimeout(() => {
-          navigation.replace("MainTabs");
-        }, 3500);
+        navigation.replace("MainTabs");
+        showToast(
+          "success",
+          "Login Successful",
+          "You have successfully logged in!"
+        );
       } else {
-        Alert.alert("Login Failed", "One or more details are wrong");
+        showToast("error", "Login Failed", "One or more details are wrong");
       }
     } catch (error) {
-      Alert.alert("Login Failed", error.message);
+      showToast("error", "Login Failed", error.message);
     }
   };
 
   const handleSignUp = async () => {
+    if (!firstName || !lastName || !email || !password) {
+      return showToast(
+        "error",
+        "Sign up Failed",
+        "One or more details are missing"
+      );
+    }
     try {
       const hashedPassword = CryptoJS.SHA256(password).toString();
       const response = await fetch(
@@ -82,15 +101,21 @@ export default function SignUp({ navigation }) {
       if (response.ok) {
         setGlobalUser(data);
         setUser(data);
-        Alert.alert("Sign Up Successful", `Hello, ${firstName} ${lastName}!`);
-        setTimeout(() => {
-          navigation.replace("MainTabs");
-        }, 2500);
+        navigation.replace("MainTabs");
+        showToast(
+          "success",
+          "Sign Up Successful",
+          `Hello, ${firstName} ${lastName}!`
+        );
       } else {
-        Alert.alert("Sign Up Failed", "Unable to sign up, please try again.");
+        showToast(
+          "error",
+          "Sign Up Failed",
+          "Unable to sign up, please try again."
+        );
       }
     } catch (error) {
-      Alert.alert("Sign Up Failed", error.message);
+      showToast("error", "Sign Up Failed", error.message);
     }
   };
 
@@ -107,10 +132,14 @@ export default function SignUp({ navigation }) {
   return (
     <Layout>
       <View style={styles.container}>
+        {/* Removed <Toast /> from here */}
         <View style={styles.headlineContainer}>
           <Text style={styles.headline}>Welcome to the Travel App</Text>
         </View>
-        <Button title="Home" onPress={() => navigation.replace("MainTabs")}>
+        <Button
+          onPress={() => navigation.replace("MainTabs")}
+          style={styles.button}
+        >
           Home
         </Button>
         <Card style={styles.card}>
@@ -191,7 +220,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   headlineContainer: {
-    // Added a container to apply shadow to the headline
     marginBottom: 20,
   },
   headline: {
@@ -208,11 +236,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     overflow: "hidden",
     fontStyle: "italic",
-    shadowColor: "#4B0082", // Darker purple shadow
-    shadowOffset: { width: 0, height: 10 }, // Larger shadow offset for more depth
-    shadowOpacity: 1, // Full opacity for strong shadow
-    shadowRadius: 20, // Larger radius for more spread
-    elevation: 15, // For Android
+    shadowColor: "#4B0082",
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 1,
+    shadowRadius: 20,
+    elevation: 15,
   },
   card: {
     width: "90%",

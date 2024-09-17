@@ -4,6 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import StackNavigator from "./navigation/StackNavigator";
 import { SelectedHotelsProvider } from "./context/SelectedHotelsContext";
 import { UserProvider } from "./context/UserContext";
+import Toast from "react-native-toast-message";
 
 export default function App() {
   return (
@@ -11,6 +12,7 @@ export default function App() {
       <UserProvider>
         <NavigationContainer>
           <StackNavigator />
+          <Toast ref={(ref) => Toast.React.forwardRef(ref)} />
         </NavigationContainer>
       </UserProvider>
     </SelectedHotelsProvider>
