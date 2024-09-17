@@ -18,6 +18,7 @@ import {
 import Layout from "../components/Layout";
 import axios from "axios";
 import { useSelectedHotels } from "../context/SelectedHotelsContext";
+import Toast from "react-native-toast-message"; // Import Toast
 
 const UNSPLASH_ACCESS_KEY = "lHBWLGm7YURX1Uk9XrDLxNSvcrtwC1rLY5k3rjF5CTs";
 
@@ -27,13 +28,24 @@ const AboutScreen = ({ route, navigation }) => {
   const [loading, setLoading] = useState(true);
   const { selectedHotels } = useSelectedHotels();
 
-  if (!data) {
-    return (
-      <Layout>
-        <Button onPress={() => navigation.navigate("Home")}>Go to Home</Button>
-      </Layout>
-    );
-  }
+  // Function to show toast messages
+  const showToast = (type, text1, text2) => {
+    Toast.show({
+      type: type, // 'success' or 'error'
+      text1: text1,
+      text2: text2,
+    });
+  };
+
+  // If there's no data, show a toast and navigate back to Home
+  useEffect(() => {
+    if (!data || data.length === 0) {
+      showToast("error", "No Destinations", "Please select a destination.");
+      setTimeout(() => {
+        navigation.navigate("Home");
+      }, 2000); // Navigate back to Home after 2 seconds
+    }
+  }, [data]);
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -77,7 +89,9 @@ const AboutScreen = ({ route, navigation }) => {
       }
     };
 
-    fetchImages();
+    if (data) {
+      fetchImages();
+    }
   }, [data]);
 
   if (loading) {

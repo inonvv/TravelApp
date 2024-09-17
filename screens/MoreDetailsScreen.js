@@ -10,6 +10,7 @@ import Layout from "../components/Layout";
 import { Card, Title, Paragraph, Button, Avatar } from "react-native-paper";
 import axios from "axios";
 import { useSelectedHotels } from "../context/SelectedHotelsContext"; // Import the context
+import Toast from "react-native-toast-message"; // Import Toast
 
 const LeftContent = (props) => <Avatar.Icon {...props} icon="lightbulb" />;
 
@@ -19,6 +20,27 @@ const MoreDetailsScreen = ({ route, navigation }) => {
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedHotel, setSelectedHotel] = useState(null);
+
+  // Function to show toast messages
+  const showToast = (type, text1, text2) => {
+    Toast.show({
+      type: type, // 'success' or 'error'
+      text1: text1,
+      text2: text2,
+    });
+  };
+
+  // If loading persists, set a timeout for 2 seconds and navigate back to About
+  useEffect(() => {
+    if (loading) {
+      const timeout = setTimeout(() => {
+        showToast("error", "Loading Timeout", "Returning to About screen.");
+        navigation.navigate("About"); // Navigate back to the About screen
+      }, 2000); // 2 seconds timeout
+
+      return () => clearTimeout(timeout); // Clear timeout on component unmount or if loading stops
+    }
+  }, [loading]);
 
   useEffect(() => {
     const fetchHotels = async () => {
@@ -31,10 +53,15 @@ const MoreDetailsScreen = ({ route, navigation }) => {
           (hotel) => hotel.city.name === city
         );
         setHotels(filteredHotels);
-        setLoading(false);
+        setLoading(false); // Stop loading when hotels are fetched
       } catch (error) {
         console.error("Error fetching hotels:", error);
-        setLoading(false);
+        showToast("error", "No Destinations", "Please select a destination.");
+        setTimeout(() => {
+          navigation.navigate("About");
+        }, 2000);
+        setLoading(false); // Stop loading on error
+        showToast("error", "Error", "Unable to fetch hotels");
       }
     };
 
@@ -49,9 +76,14 @@ const MoreDetailsScreen = ({ route, navigation }) => {
     if (!isAlreadySelected) {
       setSelectedHotels((prev) => [...prev, hotel]);
     }
+    setTimeout(() => {
+      showToast("success", "Hotel Selected", `Hotel ${hotel.name} selected.`);
+      2000;
+    });
     navigation.navigate("About"); // Navigate to About screen
   };
 
+  // Handle loading state
   if (loading) {
     return (
       <Layout>

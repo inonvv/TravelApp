@@ -12,7 +12,7 @@ export default function App() {
       <UserProvider>
         <NavigationContainer>
           <StackNavigator />
-          <Toast ref={(ref) => Toast.React.forwardRef(ref)} />
+          <Toast ref={(ref) => Toast.setRef(ref)} />
         </NavigationContainer>
       </UserProvider>
     </SelectedHotelsProvider>

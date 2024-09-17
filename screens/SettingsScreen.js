@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Alert } from "react-native";
+import React, { useState } from "react";
+import { View, StyleSheet } from "react-native";
 import { TextInput, Button, Title, Paragraph } from "react-native-paper";
 import { useUser } from "../context/UserContext";
 import axios from "axios";
 import Layout from "../components/Layout";
+import Toast from "react-native-toast-message"; // Import Toast
 
 const SettingsScreen = ({ navigation }) => {
   const { user, setUser } = useUser();
@@ -12,9 +13,24 @@ const SettingsScreen = ({ navigation }) => {
   const [email, setEmail] = useState(user.email);
   const [loading, setLoading] = useState(false);
 
+  // Function to show toast messages
+  const showToast = (type, text1, text2) => {
+    Toast.show({
+      type: type, // 'success' or 'error'
+      text1: text1,
+      text2: text2,
+    });
+  };
+
   const handleUpdateProfile = async () => {
-    console.group("Task 1");
-    console.log("Task activity 1", firstName, lastName, email);
+    if (!firstName || !lastName || !email) {
+      // Check if any fields are empty and show error toast
+      return showToast(
+        "error",
+        "Update Failed",
+        "Please fill out all fields before saving."
+      );
+    }
 
     setLoading(true);
 
@@ -24,32 +40,31 @@ const SettingsScreen = ({ navigation }) => {
         firstName,
         lastName,
         email,
-        password: user.password,
+        password: user.password, // Keeping the password unchanged
       };
 
       const response = await axios.put(
         `https://yonixasp.bsite.net/api/Users/${user.id}`,
         updatedUser
       );
-      console.log("Task activity 2");
-      console.log("response: ", response);
-      console.log("Task activity 3");
-
-      console.groupEnd();
 
       if (response.status === 204) {
         setUser(updatedUser);
-        Alert.alert(
+        showToast(
+          "success",
           "Profile Updated",
-          "Your profile information has been updated successfully."
+          "Your profile was updated successfully."
         );
         navigation.navigate("Profile");
       } else {
-        console.log("response: ", response);
-        Alert.alert("Update Failed", "Failed to update profile information.");
+        showToast(
+          "error",
+          "Update Failed",
+          "Failed to update profile information."
+        );
       }
     } catch (error) {
-      Alert.alert("Error", error.message);
+      showToast("error", "Error", `An error occurred: ${error.message}`);
     } finally {
       setLoading(false);
     }
