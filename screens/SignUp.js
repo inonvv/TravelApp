@@ -1,4 +1,3 @@
-// SignUp.js
 import React, { useState } from "react";
 import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
 import { Card, TextInput, Button, Title, Paragraph } from "react-native-paper";
@@ -132,16 +131,15 @@ export default function SignUp({ navigation }) {
   return (
     <Layout>
       <View style={styles.container}>
-        {/* Removed <Toast /> from here */}
         <View style={styles.headlineContainer}>
           <Text style={styles.headline}>Welcome to the Travel App</Text>
         </View>
-        <Button
+        {/* <Button
           onPress={() => navigation.replace("MainTabs")}
           style={styles.button}
         >
           Home
-        </Button>
+        </Button> */}
         <Card style={styles.card}>
           <Card.Content>
             <Title style={styles.title}>

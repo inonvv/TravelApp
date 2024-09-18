@@ -165,9 +165,9 @@ const HomeScreen = ({ navigation, route }) => {
     <Layout>
       <Headline style={styles.headline}>Choose your destinations</Headline>
 
-      <Button onPress={ToSignUp} style={styles.button}>
+      {/* <Button onPress={ToSignUp} style={styles.button}>
         SignUp
-      </Button>
+      </Button> */}
       <MapView
         showsUserLocation={true}
         showsMyLocationButton={true}
